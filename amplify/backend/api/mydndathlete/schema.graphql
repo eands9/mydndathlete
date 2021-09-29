@@ -1,0 +1,28 @@
+type User
+  @model
+  @auth(rules: [{ allow: owner }])
+{
+  id: ID!
+  email: String!
+  password: String!
+}
+
+type Photo
+  @model
+  @auth(
+    rules: [
+      { allow: owner },
+      { allow: private, provider: iam, operations: [ read, update ] }
+    ]
+  )
+{
+  id: ID!
+  fullsize: S3Object!
+  thumbnail: S3Object
+}
+
+type S3Object @aws_iam @aws_cognito_user_pools {
+  region: String!
+  bucket: String!
+  key: String!
+}
